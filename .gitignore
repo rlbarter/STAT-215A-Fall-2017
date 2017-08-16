@@ -3,3 +3,4 @@
 *.gz
 *.Rhistory
 syl17.tex
+.DS_Store
