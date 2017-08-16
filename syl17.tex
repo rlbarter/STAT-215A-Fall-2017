@@ -1,0 +1,303 @@
+\documentclass[11pt]{article}
+\usepackage{fullpage}
+\usepackage{url}
+\setlength{\topmargin}{-.5in}
+\setlength{\evensidemargin}{0in}
+\setlength{\oddsidemargin}{0in}
+\setlength{\textwidth}{6.5in}
+\setlength{\textheight}{9.5in}
+
+\begin{document}
+\begin{center}
+{\large \bf Statistics 215A, Fall 2017}
+\end{center}
+{\bf Instructor:} Professor Bin Yu\\
+{\bf Lectures:} T/Th: 11:00 am -12:30 pm,  344 (?) Evans \\
+{\bf Discussion:} Friday: 9-11 am,  332 Evans\\
+
+\noindent
+{\bf Text books:}
+\begin{itemize}
+\item Draft of book ``Data Sciene in action'' by Bin Yu and Rebecca Bater.
+\item Statistical models, D. Freedman (required).
+\item The Elements of statistical learning, Hastie et al (recommended).
+\end{itemize}
+
+
+\noindent
+{\bf Bin's Office Hours in 409 Evans:}  to be announced. 
+\\[1ex]
+{\bf Phone:} 642-2021 (Office), 642-2781 (dept, messages),
+% 549-2441 (home; emergencies) 
+{\bf email:} binyu@stat.berkeley.edu \\[1ex]
+{\bf Comments, Suggestions, Gripes:} in person, email, 
+anonymous notes in my box or under the door.  All feedback is
+welcome.\\[2ex]
+{\bf GSI and office hours:}  
+Rebecca Barter (rebeccabarter@berkeley.edu): Office hours to be announced.
+GSI will be in charge of the discussion sessions and the labs/homework.
+\\[1ex]
+{\bf Phone:} 
+%658-2544 (home; emergencies); 
+642-2781 (Stat. Dept. main no.)
+\\[1ex]
+{\bf Grading:}
+\begin{itemize}
+\item 60\% assignments (homework and labs)
+\item  5\% class/discussion and participation
+\item 15\% midterm and written exam 
+\item 25\% final project
+\end{itemize}
+{\bf Assignments:}
+There will be 4 or 5 assignments given out on Friday in the discussion session and usually
+due in two weeks (there will be an announcement if otherwise). {\bf The assignments
+actually require two weeks of work to satisfactorily complete. So, it is a good idea to start very early.} The assignments contain homework problems and data analysis labs. 
+For the data labs, each student will produce a 12-page (maximum) report presenting a story that connects the motivating questions, the analysis conducted and the conclusions drawn. The reports will be made using Knitr/Sweave and the final pdf output should not contain any code whatsoever. Each report will be hosted in a github repository containing both the code and the written report.  {\bf No late assignments} will be accepted, {\em for any reason.} \\
+
+\noindent 
+{\bf Course description:}
+Information technology advances have made it possible to collect 
+huge amounts of data in every walk of our life and beyond. 
+These vast amounts of data have enabled scientists, social
+scientists, government agencies, and companies to ask increasingly complex questions 
+aimed at understanding the physical and human world,
+making pubic policies, and improve productivity.
+However having data alone is not enough; statistics is indispensable in the process of obtaining
+meaningful answers from collected data. Not only are the common statistical models incredibly 
+powerful, but statistical experimental 
+design itself provides principles and methods
+to collect data in order to effectively address the questions asked.
+
+The most influential contributions can be made when domain experts (scientists, for example) and
+statisticians work together to ask questions and brainstorm. These domain experts not only are key to
+formalizing the ideas, but they also are integral in generating the data. Engaging with the individuals 
+who collected the data in the first place allows the statistician to learn about all the 
+context in which the data lives, and subsequently, to conduct an effective analysis capable of actually 
+answering the question being asked.
+
+This course will demonstrate what is like to work with people
+of domain expertise in order to answer questions outside statistics using data. 
+At the same time, you will gain an understanding of the many steps involved
+in the iterative process of information extraction for a variety of purposes including 
+prediction, inference, and interpretation.
+The lectures (and labs) will be based on real-data problems, and students will learn 
+useful statistical concepts and methods in the contexts of these problems. 
+The goal is to illustrate how judgement and common-sense
+are crucial to the process of conducting data analysis and drawing conclusions. 
+While the statistical techniques will be introduced through a first-principles approach, 
+students will learn to develop custom techniques in less familiar situations.
+
+Many of these ideas are captured in my piece titled ``Data Wisdom'' (\url{http://www.odbms.org/2015/04/data-wisdom-for-data-science/}).
+
+The class format will be a combination of lecture and discussion groups.
+The data labs will be done individually, except for one group lab later in the semester. 
+The goal of writing the lab report is not only to gain data analysis experience, but is also 
+an exercise in communication. We ask that particular attention
+is given to the writing of the report, as your peers will be reading them.
+So that the students can learn from one another, the labs will be peer-reviewed. 
+Each student will review 2-3 labs from their peers, and will provide a grade based on several criteria
+including clarity of writing, validity of analysis and informativeness of visualizations. 
+The final grade of each lab will be decided by the GSI who will use the student grades as a guide.
+
+
+Please be aware that this is a heavy-load class. If you are not sure that you can commit, 
+please audit the class instead, since there are many students on the waitlist. 
+Further, because class discussions are an integral part of the course,
+registered students are required to attend all classes unless permitted
+by the instructor under justifiable circumstances. {\bf After the first
+3 lectures, students are expected to read sections from the draft book 
+BEFORE each lecture so we could devote more class time to group
+discussions.} 
+
+In this class, we require knowledge of upper division mathematical
+statistics and probability courses (Stat 134 and 135) at UC Berkeley.  
+In terms of computing, at a minimum you should be comfortable manipulating files in Unix and
+writing your own functions, manipulating and cleaning data and
+creating and customizing graphics in R. Ideally students will already have a basic fluency in the 
+``tidyverse'' in R as well as confident using github. While we will be providing a short introduction to
+these topics in the labs, students who are entirely unfamiliar with these tools will need to put in 
+some work to ensure that they meet the standards expected of the course.\\
+
+
+\newpage
+
+{\bf Tentative list of technical topics:}
+
+{\rm In addition to the technical topics listed below, there will be a focus on oral and written communication skills in both the labs and class discussion.}
+
+%Statistical investigation as an iterative process. Exploratory
+%data analysis (classical and modern, including data visualization methods,
+%PCA, MDS, clustering,
+%spectral clustering and random projection). Linear regression models: for
+%prediction and/or for interpretation, including OLS, Ridge, PCA regression, 
+%forward/backward selection, boosting, Lasso and more. Generalized linear models.
+%Most of the labs will be based on data problems from the instructor's research.
+
+\begin{itemize}
+
+\item 
+\textbf{Overview of the class. Logistics.}
+(0.5 weeks) (Aug. 24)
+%Introduction of the fruitfly project.
+%Basic data collection issues and basic concepts in causal inference. 
+%Statistical investigation as an iterative learning process.
+%The necessity of a question or a desire to understand something before a statistical investigation.
+%Data collection (observational
+%vs controlled studies, basic experimental design). 
+%Data quality
+%If time allows, other data issues (storage, conversion, quality) 
+%Aug. 28, Sept. 2).
+%Reading: Freedman's first chapter
+%First discussion: R. 
+
+\item 
+\textbf{Starting with a high-level question, discovery-driven Exploratory Data Analysis (EDA) with a stability consideration. Numerical summary and visual descriptions of data.}
+(2 weeks: Aug. 29, 31, Sept. 5, 7) 
+\begin{itemize}
+\item
+Problem and data source: American time use survey
+
+\item
+Numerical summaries or descriptive statistics: mean, median, mode, standard
+deviation (variance), interquartile range
+
+\item
+Visual summaries: histogram, kernel smoother, box-plot, scatter plot, lowess. 
+%through density estimation
+%and smoothing.
+%one lecture: one-dim. summary kernel methods -- var/bias trade-off
+%one lecture: two-dim. lowess (local linear methods).
+%Second Discussion: Lab 1 out (due in two weeks on Sept 20) with homework assignement too
+
+\item
+Dimension reduction through principal component analysis (PCA), and multi-dimensional scaling (MDS)
+%PCA one lecture: fast eigen decomposition
+%MDS one lecture
+
+\item
+Clustering (K-means, hierarchical clustering). Spectral clustering. Superheat.
+%Random projection
+%Classical clustering: 1 lecture 
+%1. partioning methods and hierarchical methods.
+%One lecture: Spectral clustering, Kernel PCA, DaSpec 
+%Lab 2: out on what linear models and EDA
+
+%\item Model-based clustering via EM (Sept 19) 
+
+\end{itemize}
+
+\item Prediction and assessment. Least squares. Data perturbation (1 week) (Sept. 12 \& 14 )
+%Building relationships between variables.
+%The task of prediction.
+%Assessing uncertainty and validation: cross-validation and bootstrap.
+%one lecture:  EM algorithm (bowman tutorial
+%and wikipedia and its demo) and mixture of gaussian (needs to work
+%out the details)
+
+\item Sources of randomness in data (2 weeks, Sept 19, 21, 26, 28) 
+\begin{itemize}
+\item Problem and data source: Ames housing price data
+(sampling from a population: density estimation and bias-variance trade-off)
+
+\item Problem and data source: Collected data from the first class?
+(Neyman-Rubin model)
+
+\item Problem and data source: ? 
+(cluster sampling (EM))
+
+\item Problem and data source: Snow data
+(natural experiment)
+%Stability: Bootstrap
+\end{itemize}
+
+\item 
+Problem and data source: Ames Housing.
+Linear regression models and their interpretations 
+(1 week: Oct. 3, 5; Oct. 6 Lab time as lecture time)
+
+\item Bin is on travel in the week of Oct. 9.
+Oct. 10: Linear regression as natural experiment -- paper discussion. 
+Rebecca in charge; Oct. 12 Lecture time as Lab time (swapped from the previous week).
+
+\item Problem and data source: paper reading???
+LS as adjustment in Neyman-Rubin model (Oct. 17)
+
+% First lecture: LS, projection, without stochastic assumptions
+% Second lecture: Orthogonal projections, decomposition of variances
+% One Way Anova, two way ANOVA
+% GLS: G^{-1} = W. Solve it through LS by transformation
+% Third Lecture: stochastic models (Gaussian or otherwise)
+% what assumptions are used in what results?
+% what it means to have an indept and additive noise?
+% Fourth one: robust regression, ourliers
+%Fifth: path modeling
+% Sixth: causal analysis: discussion of Winston Lin's paper
+%Lab 3 out on: model selection and logistic regression (classification)
+
+\item 
+Problem and data source: UCI data set? (enhancer data?)
+Classification: SVM, Logistic regression, weighted LS for logistic regression
+computation, and inference in Logistic regression. (1 week: Oct. 17, 19)
+
+\item Midterm week (Oct. 24 Review; Oct. 26 Midterm)
+%actual: one lecture on Predictive MDL and Mixture MDL, gMDL, AICc
+% another lecture on logistic regression
+
+%stat sci review article on bootrap.  relationship between
+
+%CV and bootstrap. Freedman's chapter on bootstrap
+
+%Model selection based on prediction: classical approaches relation with CV.
+
+%AIC, Cp, BIC, MDL
+
+%cross-validation based on likelihood
+
+%\item
+%Dimensionality reduction via model/variable selection (AIC, BIC, AIC$_c$ and MDL) (0.5 weeks) (Nov. 4)
+
+\item Exponential family and GLMs (1 week: Oct. 31, Nov. 2)
+
+\item Problem and data source: Ames housing continues.
+Multiple hypothesis testing and FDR (Nov. 7)
+
+\item Regularization in Regression and GLMs I: PCA-based, Ridge,  PLS (Nov. 9)
+% (Frank and Friedman paper)
+%(lab 4 due)
+%Regression: PCA regression, ridge,  PLS, VSS (Frank and Friedman paper)
+%(James Stein)
+
+\item
+Regularization in Regression and GLMs II: model selection, forward selection, L2boosting, Lasso and Sparse PCA via penalized regression. Inference related
+to Lasso.  (1 week: Nov. 14, 16)
+
+\item Final project assigned on Nov. 17 in discussion session.
+
+%actual: 
+%Regression: PCA regression, ridge,  PLS (1 week) 
+%Final project out
+%1 week: regualarization with sparsity: forward selection, L2boosting and Lasso
+%\item
+%Comparisons of different regularization methods in the orthogonal design case 
+%(Nov. )
+%actual: FS, L2boosting 
+
+\item Dimensionality reduction via random projection (Nov. 21) 
+
+\item Advanced topics (Nov. 28, 30)
+%model stability. V4 project. iRF 
+
+%(e.g. kernel regression, random forests, deep learning)
+% 1 lecture: ridge and james-stein (empirical bayes):
+% 1 lecture: smoothing spline
+% 1 lecture: svm regression
+% 1 lecture: boosting
+% 1 lecture: lasso
+
+\item 
+Rebecca runs lab/discussion session on Dec. 1. No in-class final exam, but there is a final project.
+\end{itemize}
+
+{\bf Final Project Due}: Dec. 8 (Friday), 5 pm.
+
+\end{document}
