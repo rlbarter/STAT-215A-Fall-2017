@@ -1,4 +1,4 @@
-
+# STAT 215A, Fall 2017
 
 This is the github repository for STAT 215A, Fall 2017.
 
@@ -79,7 +79,7 @@ Keep in mind that there are two types of visualization: *exploratory* and *expla
 
 ## Submitting the report
 
-Your report and code will be submitted via github. One of the best ways to learn github is to be forced to learn it. Fortunately there are also some excellent resources available online.
+Your report and code will be submitted via github. I will post more details on this process once I have decided how to do it.
 
 ## Peer-grading
 
