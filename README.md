@@ -111,9 +111,9 @@ To submit your projects, you will need to create a subfolder in your local `stat
 ```
 lab1/
   extra/
+  homework.pdf
   report.Rmd
   report.pdf
-  homework.pdf
 ```
 
 Your report will be contained in the `report.Rmd` file, and the `extra/` folder will simply contain any extra files needed to compile your report (such as saved images, data files, etc). The `homework.pdf` file will contain your completed homework. Please do not include any irrelevant files. Note that GitHub cannot host files more than 100 MB. If you try to push a file larger than this, GitHub will cry.
@@ -132,7 +132,24 @@ For the first lab, each student will only receive one report to grade as a trial
 
 I will grade the final project.
 
-After you have all submitted your own assignments, I will run a script that will automatically push three reports and a README into your local `lab1/` folder under a folder called `to_review/`. To retrieve your allocated reports, you will need to `git pull`. You will have one week to grade these three reports and push your feedback.
+After you have all submitted your own assignments, I will run a script that will automatically push three reports and a README into your local `lab1/` folder under a folder called `to_review/`. To retrieve your allocated reports, you will need to `git pull`. You will have one week to grade these three reports and push your feedback (by filling in feedback.txt files).
+
+
+```
+lab1/
+  extra/
+  homework.pdf
+  report.Rmd
+  report.pdf
+  to_review/
+    feedback1.txt
+    feedback2.txt
+    feedback3.txt
+    report1.Rmd
+    report2.Rmd
+    report3.Rmd
+```
+
 
 
 ## Frequently asked questions
