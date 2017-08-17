@@ -142,12 +142,22 @@ lab1/
   report.Rmd
   report.pdf
   to_review/
-    feedback1.txt
-    feedback2.txt
-    feedback3.txt
-    report1.Rmd
-    report2.Rmd
-    report3.Rmd
+    report1/
+      extra/
+      feedback.txt
+      report.Rmd
+      report.pdf
+    report2/
+      extra/
+      feedback.txt
+      report.Rmd
+      report.pdf
+    report3/
+      extra/
+      feedback.txt
+      report.Rmd
+      report.pdf
+
 ```
 
 
