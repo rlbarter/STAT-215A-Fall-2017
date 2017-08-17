@@ -77,7 +77,7 @@ There is no predetermined structure of the report, and it is entirely free form.
 
 Keep in mind that there are two types of visualization: *exploratory* and *explanatory*. Exploratory visualizations are graphics that you produce to help *you* understand the data, whereas explanatory visualizations are final versions of a small subset of these figures that you produce to explain to *other people* what is in the data. Typically you will produce many, many exploratory plots and only a few key explanatory plots that answer specific questions. Choose your explanatory plots carefully, and ask the following question of every figure in your report: "Does this figure add anything? Is my story strictly worse when I remove it?" If the answer to either question is "no", then you should remove the figure. Just because you spent a lot of time making a really pretty figure, doesn't mean that it adds anything to your story. There have been many times in my life where I have spent an hour or two making a really awesome plot only to decide the next day that it is actually fairly irrelevant to my main points and removing it.
 
-## Submitting the report
+## Setting up GitHub for this class
 
 Your report and code will be submitted via GitHub. The following instructions will show you how to set up your GitHub account and configure a repository so that you can submit your assignments. This workflow is shamelessly copied from Chris Paciorek and Jarod Millman's setup from when I took their STAT243 class way back in 2014.
 
@@ -103,15 +103,36 @@ github_name = "rlbarter"
 
 5. Finally add (`git add info.txt`), commit (`git commit -m "Added info.txt file"`), and push to your GitHub repository (`git push`).
 
+
+## Submitting your projects
+
+To submit your projects, you will need to create a subfolder in your local `stat215a` folder called `lab1` (if you are submitting lab 1). Inside this folder you should have the following (exact) structure:
+
+```
+lab1/
+  extra/
+  report.Rmd
+  report.pdf
+  homework.pdf
+```
+
+Your report will be contained in the `report.Rmd` file, and the `extra/` folder will simply contain any extra files needed to compile your report (such as saved images, data files, etc). The `homework.pdf` file will contain your completed homework. Please do not include any irrelevant files. Note that GitHub cannot host files more than 100 MB. If you try to push a file larger than this, GitHub will cry.
+
+When you are ready, you need to add, commit, and push the `lab1` file.
+
+At the time when the lab is due, I will run a script that automatically pulls all of your assignments into my local versions of your `stat215a` repositories. Please make sure to submit your labs on time. We will spend some time in a lab having everyone submit a pretend assignment so that you are all clear on what to do.
+
 ## Peer-grading
 
 While you probably did a lot of really cool stuff in your own report, an excellent way to learn about other cool things is to see what other people did! This includes other exploratory and modeling ideas, neat R tricks, and issues with the data that you didn't notice or think of when you were doing your own analysis. So that you each have the opportunity to see a splattering of alternative approaches to the labs, we will be doing peer-grading for this class.
 
-For each lab (except for the first and last one), you will each receive 3 reports from your peers to grade. A detailed rubric will be provided and you will be expected to provide both written feedback as well as a numeric grade on a variety of topics including communication, quality of data cleaning, relevance of visualizations, and reproducibility (can you easily re-compile their report). I will use these three grades for your report as a guide for grading, rather than as a final decision on your grade.
+For each report (except for the first and last one), you will each receive 3 reports from your peers to grade. A detailed rubric will be provided and you will be expected to provide both written feedback as well as a numeric grade on a variety of topics including communication, quality of data cleaning, relevance of visualizations, and reproducibility (can you easily re-compile their report). I will use these three grades for your report as a guide for grading, rather than as a final decision on your grade.
 
-For the first lab, each student will only receive one lab to grade as a trial run (so that I can assess how you each grade). However, these grades will not be used, and I will thoroughly grade each of your first labs myself so that you can see what I expect both of your own lab and of the feedback you provide.
+For the first lab, each student will only receive one report to grade as a trial run (so that I can assess how you each grade). However, these grades will not be used, and I will thoroughly grade each of your first reports myself so that you can see what I expect both of your own report and of the feedback you provide.
 
-I will grade the final project lab.
+I will grade the final project.
+
+After you have all submitted your own assignments, I will run a script that will automatically push three reports and a README into your local `lab1/` folder under a folder called `to_review/`. To retrieve your allocated reports, you will need to `git pull`. You will have one week to grade these three reports and push your feedback.
 
 
 ## Frequently asked questions
