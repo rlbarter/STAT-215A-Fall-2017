@@ -79,7 +79,30 @@ Keep in mind that there are two types of visualization: *exploratory* and *expla
 
 ## Submitting the report
 
-Your report and code will be submitted via github. I will post more details on this process once I have decided how to do it.
+Your report and code will be submitted via GitHub. The following instructions will show you how to set up your GitHub account and configure a repository so that you can submit your assignments. This workflow is shamelessly copied from Chris Paciorek and Jarod Millman's setup from when I took their STAT243 class way back in 2014.
+
+1. The first thing you need to do is set up a GitHub account https://github.com/join. You should register using your berkeley.edu email address (you can technically use another email but then you won't be able to get all of the special student deals including unlimited private repos!)
+
+1. Once you have a GitHub account set up with your .edu email, you should request an educational discount (https://education.github.com/) so that you can create private repositories for this class. You are a "student" and you want an "individual account".
+
+Once you have completed these first steps, you are then ready to create your private GitHub repository for this class.
+
+1. Create a **private** repository on GitHub called *stat215a*. Please use this **exact name** with no additional spaces, capital letters, dashes, smileys, etc.
+
+1. Add me (Rebecca) as a collaborator using my GitHub username *rlbarter*. This means that I can push and pull to your private GitHub repository. You can add collaborators in the settings for the repository.
+
+1. Clone this repository in a local directory. To do this, open terminal, navigate to wherever you want to save the stat215a folder, and type `git clone https://github.com/rlbarter/stat215a.git` (although you will need to change `rlbarter` to your own github username). A new folder called `stat215a` should appear in your local directory (it will be empty).
+
+1. Enter the folder `stat215a/` and create a file named (exactly) `info.txt`. In this file you need to set the following variables (but obviously with your own details):
+
+```
+name = "Rebecca Barter"
+SID = "0123456789"
+email = "rebeccabarter@berkeley.edu"
+github_name = "rlbarter"
+```
+
+1. Next add `git add info.txt`, commit `git commit -m "Added info.txt file"`, and push to your GitHub repository `git push`.
 
 ## Peer-grading
 
