@@ -94,7 +94,6 @@ Once you have completed these first steps, you are then ready to create your pri
 1. Clone this repository in a local directory. To do this, open terminal, navigate to wherever you want to save the stat215a folder, and type `git clone https://github.com/rlbarter/stat215a.git` (although you will need to change `rlbarter` to your own github username). A new folder called `stat215a` should appear in your local directory (it will be empty).
 
 1. Enter the folder `stat215a/` and create a file named (exactly) `info.txt`. In this file you need to set the following variables (but obviously with your own details):
-
 ```
 name = "Rebecca Barter"
 SID = "0123456789"
@@ -102,7 +101,7 @@ email = "rebeccabarter@berkeley.edu"
 github_name = "rlbarter"
 ```
 
-1. Next add `git add info.txt`, commit `git commit -m "Added info.txt file"`, and push to your GitHub repository `git push`.
+1. Finally add `git add info.txt`, commit `git commit -m "Added info.txt file"`, and push to your GitHub repository `git push`.
 
 ## Peer-grading
 
