@@ -101,7 +101,7 @@ email = "rebeccabarter@berkeley.edu"
 github_name = "rlbarter"
 ```
 
-1. Finally add `git add info.txt`, commit `git commit -m "Added info.txt file"`, and push to your GitHub repository `git push`.
+5. Finally add (`git add info.txt`), commit (`git commit -m "Added info.txt file"`), and push to your GitHub repository (`git push`).
 
 ## Peer-grading
 
