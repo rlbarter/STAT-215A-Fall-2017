@@ -4,7 +4,9 @@ This is the github repository for STAT 215A, Fall 2017.
 
 Here you will find some useful resources and information about the peer grading system.
 
-Questions and discussions between students can be posted on the forums in [piazza](piazza.com/berkeley/fall2017/stat215a/home) ([signup link](piazza.com/berkeley/fall2017/stat215a)). That way everyone else can see your question and the answers, and I don't have to answer the same questions a million billion times. Please think carefully before asking questions specifically about the projects. For example, questions concerning how to do something specific in R (e.g. "how do I convert a list of lists to a long-form data frame?") are fine, but questions asking what other people did for their analysis are not (e.g. "what are some findings that people have come across in the Redwood project?"). Questions asking about clarifications are fine.
+Questions and discussions between students can be posted on the forums in [piazza](https://piazza.com/berkeley/fall2017/stat215a/home) ([signup link](https://piazza.com/berkeley/fall2017/stat215a)). That way everyone else can see your questions and the answers, and we don't have to answer the same questions a million billion times. Preferably you will answer eachother's questions. It is our intention to only jump in when the question is one that only we can answer.
+
+Please think carefully before asking questions specifically about the projects. For example, questions concerning how to do something specific in R (e.g. "how do I convert a list of lists to a long-form data frame?") are fine, but questions asking what other people did for their analysis are not (e.g. "what are some findings that people have come across in the Redwood project?"). Questions asking about clarifications are fine.
 
 If you have a more sensitive question that you'd rather your peers not see, of course you can feel free to email me at rebeccabarter@berkeley.edu, and/or email Bin at binyu@stat.berkeley.edu.
 
@@ -30,7 +32,7 @@ Fridays, 9-11, Evans 330
 
 # Useful resources
 
-The following resources are excellent for both learning R and becomming a more advanced user.
+The following resources are excellent for both learning R and becoming a more advanced user.
 
 - The [tidyverse website](http://www.tidyverse.org/). Much of what makes R powerful is the collection of packages developed by Hadley Wickham and the other lovely people over at RStudio encompassed in a the so-called "tidyverse". The tidyverse website provides a summary of all of its packages. The particularly useful ones will be `ggplot2` and `dplyr`.
 
