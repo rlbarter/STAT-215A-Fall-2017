@@ -63,7 +63,7 @@ The current tentative dates for the labs are as follows:
 | fMRI (final project)           | November 17   | December 8 (3 weeks)    | (graded by Rebecca)        |
 
 
-*Each person only has to grade one report so there is a shorter grading time window for the group project (also in order to wrap up before everyone leaves for Thanksgiving)
+* Each person only has to grade one report so there is a shorter grading time window for the group project (also in order to wrap up before everyone leaves for Thanksgiving)
 
 ## The reports
 
@@ -79,6 +79,8 @@ There is no predetermined structure of the report, and it is entirely free form.
 1. Favour simplicity over complexity. It is much more important to be thorough and to communicate effectively than to come up with some super fancy modeling idea that no one understands. If a super fancy is needed or justified, then feel free to go for it.
 
 Keep in mind that there are two types of visualization: *exploratory* and *explanatory*. Exploratory visualizations are graphics that you produce to help *you* understand the data, whereas explanatory visualizations are final versions of a small subset of these figures that you produce to explain to *other people* what is in the data. Typically you will produce many, many exploratory plots and only a few key explanatory plots that answer specific questions. Choose your explanatory plots carefully, and ask the following question of every figure in your report: "Does this figure add anything? Is my story strictly worse when I remove it?" If the answer to either question is "no", then you should remove the figure. Just because you spent a lot of time making a really pretty figure, doesn't mean that it adds anything to your story. There have been many times in my life where I have spent an hour or two making a really awesome plot only to decide the next day that it is actually fairly irrelevant to my main points and removing it.
+
+You will also be submitting your code, and you should write it nicely according to the Google Style Guide (https://google.github.io/styleguide/Rguide.xml).
 
 ## Setting up GitHub for this class
 
