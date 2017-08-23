@@ -59,11 +59,10 @@ The current tentative dates for the labs are as follows:
 | Linguistic Survey              | September 22  | October 5 (2 weeks)     | October 13                 |
 | Stability of Linguistic Survey | October 13    | October 20 (1 week)     | October 27                 |
 | *Midterm*                      | October 26    |                         | (graded by Rebecca)        |
-| Cloud detection (group project)| October 27    | November 17 (3 weeks)   | November 22*               |
+| Cloud detection (group project)| October 27    | November 17 (3 weeks)   | November 22                |
 | fMRI (final project)           | November 17   | December 8 (3 weeks)    | (graded by Rebecca)        |
 
 
-* Each person only has to grade one report so there is a shorter grading time window for the group project (also in order to wrap up before everyone leaves for Thanksgiving)
 
 ## The reports
 
