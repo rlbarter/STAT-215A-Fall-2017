@@ -137,26 +137,31 @@ For the first lab, each student will only receive one report to grade as a trial
 
 I will grade the final project.
 
-After you have all submitted your own assignments, I will run a script that will automatically push two reports and a README into your local `lab1/` folder under a folder called `to_review/`. To retrieve your allocated reports, you will need to `git pull`. You will have one week to grade these two reports and push your feedback (by filling in feedback.txt files). Your `lab` folder will have the structure below:
+After you have all submitted your own assignments (and shortly after the deadline), I will run a script that will automatically push two randomly selected reports into a folder called `lab1_review/`. To retrieve your allocated reports, you will need to `git pull`. You will have one week to grade these two reports and push your feedback (by filling in feedback.txt files). Your `lab` folder will have the structure below:
 
 
 ```
 lab1/
-  extra/
+  data/
   homework.pdf
-  report.Rmd
-  report.pdf
-  to_review/
-    report1/
-      extra/
-      feedback.txt
-      report.Rmd
-      report.pdf
-    report2/
-      extra/
-      feedback.txt
-      report.Rmd
-      report.pdf
+  lab1.Rmd
+  lab1.pdf
+  lab1_blind.Rmd
+  lab1_blind.pdf
+  R/
+lab1_review/
+  report1/
+    data/
+    feedback.txt
+    lab1_blind.Rmd
+    lab1_blind.pdf
+    R/
+  report2/
+    data/
+    feedback.txt
+    lab1_blind.Rmd
+    lab1_blind.pdf
+    R/
 ```
 
 
