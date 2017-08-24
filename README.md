@@ -85,28 +85,38 @@ You will also be submitting your code, and you should write it nicely according 
 
 Your report and code will be submitted via GitHub. The following instructions will show you how to set up your GitHub account and configure a repository so that you can submit your assignments. This workflow is shamelessly copied from Chris Paciorek and Jarod Millman's setup from when I took their STAT243 class way back in 2014.
 
-1. The first thing you need to do is set up a GitHub account https://github.com/join. You should register using your berkeley.edu email address (you can technically use another email but then you won't be able to get all of the special student deals including unlimited private repos!)
+1. Install Git on your system (https://git-scm.com/book/en/v2/Getting-Started-Installing-Git).
 
-1. Once you have a GitHub account set up with your .edu email, you should request an educational discount (https://education.github.com/) so that you can create private repositories for this class. You are a "student" and you want an "individual account".
+1. Sign up for GitHub (https://github.com/).
+
+1. Go to https://education.github.com/ and sign up for the student pack to get unlimited private repositories. You are a "student" and you want an "individual account".
 
 Once you have completed these first steps, you are then ready to create your private GitHub repository for this class.
 
-1. Create a **private** repository on GitHub called *stat215a*. Please use this **exact name** with no additional spaces, capital letters, dashes, smileys, etc.
+1. Locally on your machine, clone my stat215a repository: `git clone https://github.com/rlbarter/stat215a`. This will create a copy of the repository on your own computer.
 
-1. Add me (Rebecca) as a collaborator using my GitHub username *rlbarter*. This means that I can push and pull to your private GitHub repository. You can add collaborators in the settings for the repository.
+1. On the GitHub website, log in and create a **private** remote repository called *stat215a*. Add me (*rlbarter*) as a collaborator for this repository (check out settings on the repo website).
 
-1. Clone this repository in a local directory. To do this, open terminal, navigate to wherever you want to save the stat215a folder, and type `git clone https://github.com/rlbarter/stat215a.git` (although you will need to change `rlbarter` to your own github username). A new folder called `stat215a` should appear in your local directory (it will be empty).
+1. Back in the terminal, set the origin of your local repository to be the remote repository that you just made. Change USERNAME below to your username. This tells git which remote repository to push your changes to when you `git push` (`git remote add origin https://github.com/USERNAME/stat215a.git`).
 
-1. Enter the folder `stat215a/` and create a file named (exactly) `info.txt`. In this file you need to set the following variables (but obviously with your own details):
+1. Edit *info.txt* to reflect your own information.
+
 ```
-name = "Rebecca Barter"
+name = "Jane Smith"
 SID = "0123456789"
-email = "rebeccabarter@berkeley.edu"
-github_name = "rlbarter"
+email = "jsmith@berkeley.edu"
+github_name = "janesmith"
 ```
 
-5. Finally add (`git add info.txt`), commit (`git commit -m "Added info.txt file"`), and push to your GitHub repository (`git push`).
+Now you're ready to push to your remote repository for the first time:
 
+1. Check git status `git status`
+
+1. Add (`git add info.txt`) and commit (`git commit -m “Updated info.txt with my own information”`) your edited *info.txt* file
+
+1. Push your changes to your copy of the remote repository (`git push` or sometimes `git push remote origin`)
+
+1. Check that info.txt has been updated in your remote github repository by navigating to https://github.com/USERNAME/stat215a (change USERNAME to your username)
 
 ## Submitting your projects
 

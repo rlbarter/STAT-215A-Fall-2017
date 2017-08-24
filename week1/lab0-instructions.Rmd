@@ -22,7 +22,7 @@ This lab is not worth any grades; you can simply not complete the lab if you rea
 
 1. Locally on your machine, clone my stat215a repository: `git clone https://github.com/rlbarter/stat215a`
 
-1. On the GitHub website, log in and create a private remote repository called *stat215a*. Add me (*rlbarter*) as a collaborator for this repository (check out settings on the repo website). 
+1. On the GitHub website, log in and create a **private** remote repository called *stat215a*. Add me (*rlbarter*) as a collaborator for this repository (check out settings on the repo website). 
 
 1. Back in the terminal, set the origin of your local repository to be the remote repository that you just made. Change USERNAME below to your username. This tells git which remote repository to push your changes to when you `git push` (`git remote add origin https://github.com/USERNAME/stat215a.git`)
 
@@ -32,7 +32,7 @@ This lab is not worth any grades; you can simply not complete the lab if you rea
 
 1. Add (`git add info.txt`) and commit (`git commit -m “Updated info.txt with my own information”`) your edited *info.txt* file
 
-1. Push your changes to the remote repository (`git push` or sometimes `git push remote origin`)
+1. Push your changes to your copy of the remote repository (`git push` or sometimes `git push remote origin`)
 
 1. Check that info.txt has been updated in your remote github repository by navigating to https://github.com/USERNAME/stat215a (change USERNAME to your username)
 
@@ -83,7 +83,14 @@ When writing code, you should follow the Google Style Guide (https://google.gith
 
 ## Loading the data
 
-1. Pull any changes from the stat215a github repo `git pull`.
+In your terminal:
+
+1. Clone the STAT-215A-Fall-2017 github repo `git clone https://github.com/rlbarter/STAT-215A-Fall-2017` to get the class materials for this week.
+
+1. If you have already done this, pull any changes from the STAT-215A-Fall-2017 github repo `git pull`.
+
+
+In R: 
 
 1. Load USArrests in R (`data("USArrests")`)
 
