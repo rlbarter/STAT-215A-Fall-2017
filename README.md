@@ -83,7 +83,7 @@ You will also be submitting your code, and you should write it nicely according 
 
 ## Setting up GitHub for this class
 
-Your report and code will be submitted via GitHub. The following instructions will show you how to set up your GitHub account and configure a repository so that you can submit your assignments. This workflow is shamelessly copied from Chris Paciorek and Jarod Millman's setup from when I took their STAT243 class way back in 2014.
+Your report and code will be submitted via GitHub. The following instructions will show you how to set up your GitHub account and configure a repository so that you can submit your assignments. This workflow is shamelessly copied (with slight modifications) from Chris Paciorek and Jarod Millman's setup from when I took their STAT243 class way back in 2014.
 
 1. Install Git on your system (https://git-scm.com/book/en/v2/Getting-Started-Installing-Git).
 
@@ -124,15 +124,31 @@ To submit your projects, you will need to create a subfolder in your local `stat
 
 ```
 lab1/
-  extra/
+  data/
   homework.pdf
-  report.Rmd
-  report.pdf
+  lab1.Rmd
+  lab1.pdf
+  lab1_blind.Rmd
+  lab1_blind.pdf
+  R/
+  extra/
 ```
 
-Your report will be contained in the `report.Rmd` file, and the `extra/` folder will simply contain any extra files needed to compile your report (such as saved images, data files, etc). The `homework.pdf` file will contain your completed homework. Please do not include any irrelevant files. Note that GitHub cannot host files more than 100 MB. If you try to push a file larger than this, GitHub will cry.
+- The source of your report (with code) will be contained in the `lab1.Rmd` file (`lab1.Rnw` is fine too).
 
-When you are ready, you need to add, commit, and push the `lab1` file.
+- The compiled version of your report will be contained in `lab1.pdf`.
+
+- You will also submit a "blind" version of each of these documents that does not include your name (`lab1_blind.Rmd` and `lab1_blind.pdf`).
+
+- The `R/` folder will contain any extra R scripts needed to compile your report.
+
+- The `data/` folder will contain any data you use for the lab. Note that in the instance that the data is a large file (over 100MB), you do not need to include it in the `data/` folder.
+
+- The `homework.pdf` file will contain your completed homework. Please do not include any irrelevant files.
+
+Note that GitHub cannot host files more than 100 MB. If you try to push a file larger than this, GitHub will cry.
+
+When you are ready, you need to add, commit, and push the `lab1/` folder.
 
 At the time when the lab is due, we will run a script that automatically pulls all of your assignments into my local versions of your `stat215a` repositories. Please make sure to submit your labs on time. We will spend some time in a lab having everyone submit a pretend assignment so that you are all clear on what to do.
 
