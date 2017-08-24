@@ -97,7 +97,7 @@ Once you have completed these first steps, you are then ready to create your pri
 
 1. On the GitHub website, log in and create a **private** remote repository called *stat215a*. Add me (*rlbarter*) as a collaborator for this repository (check out settings on the repo website).
 
-1. Back in the terminal, set the origin of your local repository to be the remote repository that you just made. Change USERNAME below to your username. This tells git which remote repository to push your changes to when you `git push` (`git remote add origin https://github.com/USERNAME/stat215a.git`).
+1. Back in the terminal, set the origin of your local repository to be the remote repository that you just made. Change USERNAME below to your username. This tells git which remote repository to push your changes to when you `git push` (`git remote set-url origin https://github.com/USERNAME/stat215a.git`).
 
 1. Edit *info.txt* to reflect your own information.
 
@@ -110,7 +110,7 @@ github_name = "janesmith"
 
 Now you're ready to push to your remote repository for the first time:
 
-1. Check git status `git status`
+1. Check git status `git status`. You should see a bunch of text including `modified:   info.txt`.
 
 1. Add (`git add info.txt`) and commit (`git commit -m “Updated info.txt with my own information”`) your edited *info.txt* file
 

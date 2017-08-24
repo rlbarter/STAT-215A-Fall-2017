@@ -24,7 +24,7 @@ This lab is not worth any grades; you can simply not complete the lab if you rea
 
 1. On the GitHub website, log in and create a **private** remote repository called *stat215a*. Add me (*rlbarter*) as a collaborator for this repository (check out settings on the repo website). 
 
-1. Back in the terminal, set the origin of your local repository to be the remote repository that you just made. Change USERNAME below to your username. This tells git which remote repository to push your changes to when you `git push` (`git remote add origin https://github.com/USERNAME/stat215a.git`)
+1. Back in the terminal, set the origin of your local repository to be the remote repository that you just made. Change USERNAME below to your username. This tells git which remote repository to push your changes to when you `git push` (`git remote set-url origin https://github.com/USERNAME/stat215a.git`)
 
 1. Inside this repository, you will find a file called *info.txt*. Edit this file to reflect your own information.
 
