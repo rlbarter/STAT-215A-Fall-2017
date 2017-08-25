@@ -1,0 +1,54 @@
+\documentclass{article}
+
+
+\setlength\parindent{0pt}
+\usepackage{float}
+\usepackage{a4wide}
+
+\title{Title}
+
+\author{Rebecca}
+
+\begin{document}
+
+
+\maketitle
+
+
+To be able to compile this document, you need to do the following: 
+
+\begin{itemize}
+\item You need to install LaTeX on your computer.
+\item You need to install the \texttt{knitr} R package (\texttt{install.packages(``knitr'')})
+\item You need to go into settings in RStudio (or ``global options'' in the ``tools'' menu if you're on a Windows machine), click on the ``Sweave'' panel and change ``weave files using:'' to ``knitr''
+\item You need to delete the line \texttt{\textbackslash{SweaveOpts\{concordance=TRUE\}}} towards the top of this document (if it is there!)
+\end{itemize}
+
+
+
+Below is a code chunk with a bunch of arguments:
+
+\begin{itemize}
+\item \texttt{echo = FALSE}: hides the code itself in the pdf output
+\item \texttt{message = FALSE} and \texttt{warning = FALSE}: hides messy output from functions and package loadings
+\item \texttt{fig.height = 4}, \texttt{fig.width = 7}: changes the size of the figure
+\item \texttt{fig.align = ``center''}: places the figure in the center (in the horizonatal direction)
+\item \texttt{fig.pos = ``H''}: places the figure ``here'' (you need the \textbackslash{usepackage\{float\}} in the preamble of the document for this to work)
+\end{itemize}
+
+
+When you're ready, hit the ``compile PDF'' button.
+
+<<echo = FALSE, warning=FALSE, message=FALSE, fig.height = 4, fig.width = 7, fig.align='center', fig.pos="H", fig.cap = "I'm a caption">>=
+
+library(tidyverse)
+ggplot(iris) + 
+  geom_point(aes(x = Sepal.Length, 
+                   y = Sepal.Width, 
+                   col = Species)) 
+@
+
+
+I'm some more text!
+
+\end{document}
