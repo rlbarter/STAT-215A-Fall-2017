@@ -4,3 +4,8 @@
 *.Rhistory
 syl17.tex
 .DS_Store
+week2/*.csv
+week2/*.txt
+week2/read-me
+week2/sonoma-dates
+*cache
