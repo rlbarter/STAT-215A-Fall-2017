@@ -24,9 +24,9 @@ Fridays, 9-11, Evans 330
 
 **Office Hours**:
 
-*Bin*: TBA
+*Bin*: 
 
-*Rebecca*: TBA
+*Rebecca*: Mondays 3:30-5:30 & Thursdays 9-11
 
 
 
