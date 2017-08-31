@@ -1,0 +1,173 @@
+\documentclass[english]{article}
+
+\usepackage{geometry}
+\geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\setlength{\parskip}{\smallskipamount}
+\setlength{\parindent}{0pt}
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{url}
+\usepackage{float} % required for fig.pos = "H"
+
+\title{Gapminder exploration}
+\author{Rebecca Barter}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+
+Gapminder is an excellent organization aimed at increasing the use and understanding of statistics on a number of global topics. They collect a variety of data from many sources and aim to produce fact-based statistics reflecting the current state of our world. The data we are exploring throughout this analysis consists of population, life expectency and GDP information for many countries through time.
+
+The data can be found from \url{https://raw.githubusercontent.com/resbaz/r-novice-gapminder-files/master/data/gapminder-FiveYearData.csv} if you would like to download it yourself.
+
+<<packages, echo = FALSE, warning=FALSE, message=FALSE>>=
+library(tidyverse)
+library(xtable)
+@
+
+<<scripts, echo = FALSE, warning=FALSE, message=FALSE>>=
+source("R/load.R")
+source("R/clean.R")
+source("R/utils.R")
+@
+
+Fortunately, the data was already very clean, so we did not conduct any major modifications to the data.
+
+
+<<load-data, echo = FALSE>>=
+# load the original gapminder data
+gapminder_orig <- loadGapminderData()
+# clean the gapminder data
+gapminder <- cleanGapminderData(gapminder_orig)
+@
+
+
+\section{Visualizing the gapminder data (ggplot2)}
+
+
+We are interested in exploring life expectancy as a function of GDP. Figure \ref{fig:gdp-life} shows a scatterplot of life expectancy versus GDP.
+
+<<gdp-life, echo = FALSE, fig.width = 6, fig.height = 4, fig.align="center", fig.pos = "H", fig.cap = "Life expectancy versus GDP for all countries in the year 2007">>=
+# start with a blank ggplot layer. Input the gapminder data frame.
+gapminder %>%
+  filter(year == 2007) %>%
+  ggplot() +
+  # add a scatter layer
+  geom_point(aes(x = gdp_per_cap, y = life_exp, size = population, col = continent), 
+             alpha = 0.6) +
+  # label the outlying data points
+  geom_text(aes(x = gdp_per_cap + 500, y = life_exp, label = country), 
+            hjust = 0,
+            size = 2,
+            data = filter(gapminder, 
+                          gdp_per_cap > 9000, life_exp < 60, year == 2007)) +
+  # add a nice theme
+  theme_nice +
+  scale_x_log10() +
+  xlab("GDP per capita (log10)") +
+  ylab("Life expectancy") +
+  ggtitle("Life expectancy versus GDP for 2007")
+@
+
+
+It certainly appears as though there is some kind of rapid increase in the low GDP range, which slows to a gradual increase in the high GDP range. Several African countries have surprisingly low life expectency for their GDP.
+
+Next, we explore change in life expectancy over time. Figure \ref{fig:life-time} shows a series of boxplots, one for each year-continent combination. Each data point corresponds to the life expectency of a country for the given year in the given continent.
+
+
+
+
+<<life-time, echo = FALSE, fig.width = 8, fig.height = 6, fig.align="center", fig.pos = "H", fig.cap = "Life expectancy over time">>=
+gapminder %>%
+  # remove Oceania
+  filter(continent != "Oceania") %>%
+  # input data frame into ggplot base function
+  ggplot() +
+  # add a boxplot layer grouped by year
+  geom_boxplot(aes(x = year, y = life_exp, group = year), fill = "grey90") +
+  # add a nice theme
+  theme_nice +
+  xlab("Year") +
+  ylab("Life expectancy") +
+  ggtitle("Life expectancy over time") +
+  # make a separate plot for each continent
+  facet_wrap(~continent)
+@
+
+
+We see that the life expectancy increased in Africa from 1950 up until the 1990s but has stayed fairly constant with a median of around 50 years since the 1990s. The Americas, Asia, and Europe on the other hand, have experienced continued growth. 
+
+\subsection{Comparing GDP across continents (dplyr)}
+
+Table 1 compares GDP per capita across continents.
+
+<<echo = FALSE, eval = FALSE>>=
+# calculate the avergae GDP per cap for different contents
+
+# the following code is very inneficient (it violates DRY)
+# it is also hard to read
+mean(gapminder[gapminder$continent == "Africa", "gdpPercap"])
+mean(gapminder[gapminder$continent == "Europe", "gdpPercap"])
+mean(gapminder[gapminder$continent == "Americas", "gdpPercap"])
+mean(gapminder[gapminder$continent == "Asia", "gdpPercap"])
+@
+
+
+<<gdp_table, echo = FALSE, results = "asis">>=
+# the following is less repetitive, and much more readible!
+gdp_table <- gapminder %>%
+  # filter to rows from the year 2007
+  filter(year == 2007) %>%
+  # calculate the average GDP for all continents
+  group_by(continent) %>%
+  summarise(countries = n(), # add up the number of countries
+            mean = mean(gdp_per_cap), # average GDP
+            SD = sd(gdp_per_cap)) %>%
+  # arrange the rows in order of decreasing average GDP
+  arrange(desc(mean))
+# print a LaTeX table displaying this data
+print(xtable(gdp_table,
+             caption = paste("A table displaying the mean and standard deviation",
+                             "of GDP per capita in 2007 for each continent"),
+             label = "gdp_table"),
+      table.placement = "H",
+      include.rownames = FALSE)
+@
+
+
+Clearly Oceania is leading the way in terms of GDP per cap! Go Aussies!
+
+Next, we want to ask about raw GDP (i.e. overall GDP for each country, rather than standardized by per capita). Table 2 shows the average total GDP for each continent for 2007.
+
+
+<<total_gdp_table, echo = FALSE, results = "asis">>=
+# the following is less repetitive, and much more readible!
+total_gdp_table <- gapminder %>%
+  # filter to rows from the year 2007
+  filter(year == 2007) %>%
+  # define a variable equal to the total GDP
+  mutate(gdp_total = gdp_per_cap * population / 1000000000) %>%
+  # calculate the average GDP for all continents
+  group_by(continent) %>%
+  summarise(countries = n(), # add up the number of countries
+            mean = round(mean(gdp_total)), # average GDP
+            SD = round(sd(gdp_total))) %>%
+  # arrange the rows in order of decreasing average GDP
+  arrange(desc(mean))
+# print a LaTeX table displaying this data
+print(xtable(total_gdp_table,
+             caption = paste("A table displaying the mean and standard deviation",
+                             "of GDP (in billions) in 2007 for each continent"),
+             label = "total_gdp_table",
+             digits = 0),
+      table.placement = "H",
+      include.rownames = FALSE)
+@
+
+I didn't get a chance to write up examples about tidyr, but feel free to follow the example at http://swcarpentry.github.io/r-novice-gapminder/14-tidyr/.
+
+\end{document}
