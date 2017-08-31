@@ -5,7 +5,8 @@
 syl17.tex
 .DS_Store
 week2/*.csv
-week2/*.txt
+week2/*.tex
 week2/read-me
 week2/sonoma-dates
 *cache
+figure
