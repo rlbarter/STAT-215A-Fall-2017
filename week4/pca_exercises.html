@@ -126,7 +126,7 @@ $(document).ready(function () {
 <p>In this week’s exercise, we will be generating a fake dataset with a specified covariance structure, and then will be comparing how various different PCA methods perform on this dataset (they should all provide the same answer, but some will be much more efficient than others).</p>
 <div id="defining-a-covariance-matrix" class="section level2">
 <h2>Defining a covariance matrix</h2>
-<p>First, the following function defines a (<span class="math inline">\(p \times p\)</span>) covariance matrix with decaying off diagonals</p>
+<p>First, the following function defines a (<span class="math inline">\(p \times p\)</span>) covariance matrix with decaying off diagonals such as in the following example:</p>
 <p><span class="math display">\[
 \textrm{Cov}(X)= \left[ \begin{array}{ccccccc}
 1 &amp; 0.4 &amp; 0.3 &amp; 0.2 &amp; 0.1 &amp; 0 &amp; 0\\
@@ -179,7 +179,6 @@ $(document).ready(function () {
   diag(mat) &lt;- 1
   return(mat)
 }</code></pre>
-<p>To understand why we might want to use the sparse Matrix representation from the Matrix package, we can compare the amount of storage required for a dense and a sparse covariance matrix.</p>
 <p>Let’s define a covariance matrix with 10 variables <span class="math inline">\((p = 10)\)</span>, and with 4 off-diagonals (<span class="math inline">\(m = 4\)</span>), and a maximum covariance of 0.8.</p>
 <pre class="r"><code># Model parameters.
 p &lt;- 10     # The dimension of each observation (number of variables).
@@ -201,6 +200,7 @@ cov_sparse</code></pre>
 ##  [8,] .   .   .   0.2 0.4 0.6 0.8 1.0 0.8 0.6
 ##  [9,] .   .   .   .   0.2 0.4 0.6 0.8 1.0 0.8
 ## [10,] .   .   .   .   .   0.2 0.4 0.6 0.8 1.0</code></pre>
+<p>The standard non-sparse representation contains the same values but records 0s.</p>
 <pre class="r"><code># Now use dense matrices and check the size
 cov_dense &lt;- GetCov(p, m, max.cov = 0.8, sparse = F)
 cov_dense</code></pre>
@@ -219,7 +219,7 @@ cov_dense</code></pre>
 </div>
 <div id="exercise-1" class="section level1">
 <h1>Exercise 1</h1>
-<p><strong>Let <span class="math inline">\(n = 10000\)</span>. Use Cholesky decomposition to generate a dataset (an <span class="math inline">\(n \times p\)</span> matrix <span class="math inline">\(X\)</span>) which has covariance matrix <code>m_sparse</code> (compare the computation time between <code>m_sparse</code> and <code>m_dense</code>). Check that the covariance is correct. Generate a plot showing that adjacent columns are correlated with one another.</strong></p>
+<p><strong>Let <span class="math inline">\(n = 10000\)</span>. Use Cholesky decomposition to generate a dataset (an <span class="math inline">\(n \times p\)</span> matrix <span class="math inline">\(X\)</span>) which has covariance matrix <code>cov_sparse</code> (compare the computation time between <code>cov_sparse</code> and <code>cov_dense</code>). Check that the covariance is correct. Generate a plot showing that adjacent columns are correlated with one another.</strong></p>
 </div>
 <div id="exercise-2" class="section level1">
 <h1>Exercise 2</h1>

@@ -14,7 +14,7 @@ In this week's exercise, we will be generating a fake dataset with a specified c
 
 ## Defining a covariance matrix
 
-First, the following function defines a ($p \times p$) covariance matrix with decaying off diagonals
+First, the following function defines a ($p \times p$) covariance matrix with decaying off diagonals such as in the following example:
 
 $$
 \textrm{Cov}(X)= \left[ \begin{array}{ccccccc}
@@ -81,9 +81,6 @@ GetCov <- function(p, m, max.cov = .5, sparse = T) {
 }
 ```
 
-
-To understand why we might want to use the sparse Matrix representation from the Matrix package, we can compare the amount of storage required for a dense and a sparse covariance matrix.
-
 Let's define a covariance matrix with 10 variables $(p = 10)$, and with 4 off-diagonals ($m = 4$), and a maximum covariance of 0.8.
 
 ```{r}
@@ -101,7 +98,7 @@ cov_sparse <- GetCov(p, m, max.cov = 0.8, sparse = T)
 cov_sparse
 ```
 
-
+The standard non-sparse representation contains the same values but records 0s.
 ```{r}
 # Now use dense matrices and check the size
 cov_dense <- GetCov(p, m, max.cov = 0.8, sparse = F)
@@ -113,7 +110,7 @@ We will see below that computation with the sparse version can be much, much fas
 
 # Exercise 1 
 
-**Let $n = 10000$. Use Cholesky decomposition to generate a dataset (an $n \times p$ matrix $X$) which has covariance matrix `m_sparse` (compare the computation time between `m_sparse` and `m_dense`). Check that the covariance is correct. Generate a plot showing that adjacent columns are correlated with one another.**
+**Let $n = 10000$. Use Cholesky decomposition to generate a dataset (an $n \times p$ matrix $X$) which has covariance matrix `cov_sparse` (compare the computation time between `cov_sparse` and `cov_dense`). Check that the covariance is correct. Generate a plot showing that adjacent columns are correlated with one another.**
 
 
 # Exercise 2
