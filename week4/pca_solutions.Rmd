@@ -1,0 +1,340 @@
+---
+title: "PCA excercises"
+author: "Rebecca Barter"
+date: "9/14/2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+In this week's exercise, we will be generating a fake dataset with a specified covariance structure, and then will be comparing how various different PCA methods perform on this dataset (they should all provide the same answer, but some will be much more efficient than others).
+
+
+## Defining a covariance matrix
+
+First, the following function defines a ($p \times p$) covariance matrix with decaying off diagonals such as in the following example:
+
+$$
+\textrm{Cov}(X)= \left[ \begin{array}{ccccccc}
+1 & 0.4 & 0.3 & 0.2 & 0.1 & 0 & 0\\
+0.4 & 1 & 0.4 & 0.3 & 0.2 & 0.1 & 0 \\
+0.3 & 0.4 & 1 & 0.4 & 0.3 & 0.2 & 0.1\\
+0.2 & 0.3 & 0.4 & 1 & 0.4 & 0.3 & 0.2\\
+0.1 & 0.2 & 0.3 & 0.4 & 1 & 0.4 & 0.3 \\
+0 & 0.1 & 0.2 & 0.3 & 0.4 & 1 & 0.4\\
+0 & 0 & 0.1 & 0.2 & 0.3 & 0.4 & 1 
+\end{array} \right]
+$$
+
+```{R echo = FALSE, warning = FALSE, message = FALSE}
+library(Matrix)
+library(irlba)
+library(microbenchmark)
+library(tidyverse)
+library(GGally)
+```
+
+
+```{r}
+GetCov <- function(p, m, max.cov = .5, sparse = T) {
+  # Generate a covariance matrix with limited off-diagonal elements.
+  #
+  # Args:
+  #   p: dimensionality of the cov mat
+  #   m: number non-zero elements in each direction off the diagonal
+  #   max.cov: maximum covariance between variables
+  #   sparse: whether to use sparse data structure (Matrix vs matrix)
+  #
+  # Returns:
+  #   A matrix with nonzeros close to the diagonal and zeros everywhere else
+  #   Each row will look like 
+  #       0 0 0 0 0 .1 .2 ... .9 1 .9  ... .2 .1 0 0 0 0 0
+
+  # generate a sequence of covariances from 0 to max.cov
+  r <- seq(from = max.cov, to = 0, length.out = m + 1)
+  # remove the last element (0)
+  r <- r[-length(r)]
+  
+  # generate an empty covariance matrix 
+  # (defined as a sparse matrix if specified)
+  if (sparse) {
+    mat <- Matrix(0, nrow = p, ncol = p, sparse = T)
+  } else {
+    mat <- matrix(0, nrow = p,ncol = p)
+  }
+  
+  # fill in the lower diagonal of the covariance marix with covariance values
+  for (i in 1:length(r)) {
+    # identify the off-diagnoal matrix indices 
+    index <- seq(from = i + 1, by = p + 1, length.out = p - i )
+    # fill in all lower off-diagonal indices with current covariance value
+    mat[index] <- r[i]
+  }
+  
+  # fill in the upper off-diagonals of the matrix
+  mat <- mat + t(mat)
+  # fill in the diagonal with 1s
+  diag(mat) <- 1
+  return(mat)
+}
+```
+
+
+To understand why we might want to use the sparse Matrix representation from the Matrix package, we can compare the amount of storage required for a dense and a sparse covariance matrix.
+
+Let's define a covariance matrix with 10 variables $(p = 10)$, and with 4 off-diagonals ($m = 4$), and a maximum covariance of 0.8.
+
+```{r}
+# Model parameters.
+p <- 10     # The dimension of each observation (number of variables).
+m <- 4      # The number of off-diagonal covariance terms in each direction.
+```
+
+Notice that the sparse representation (below) replaces 0's with dots ($\cdot$).
+
+```{r}
+# Get the covariance matrix, set number of non zero off diagonals at 40
+# First, use sparse matrices and check the size
+cov_sparse <- GetCov(p, m, max.cov = 0.8, sparse = T)
+cov_sparse
+```
+
+
+```{r}
+# Now use dense matrices and check the size
+cov_dense <- GetCov(p, m, max.cov = 0.8, sparse = F)
+cov_dense
+```
+
+
+We will see below that computation with the sparse version can be much, much faster than computation with the dense version.
+
+
+# Exercise 1 
+
+**Let $n = 10000$. Use Cholesky decomposition to generate a dataset (an $n \times p$ matrix $X$) which has covariance matrix `cov_sparse` (compare the computation time between `cov_sparse` and `cov_dense`). Check that the covariance is correct. Generate a plot showing that adjacent columns are correlated with one another.**
+
+
+Note that the Cholesky decomposition of a Hermitian positive definite matrix, $A$, is a factorization 
+
+$$G = L L^T$$
+into the matrix product of a lower triangular matrix, $L$, and it's upper triangular transpose, $L^T$.
+
+Suppose that we want to generate a matrix of normally distirbuted variables, with covariance matrix given by $G$. Then we can simulate a ($p \times n$) matrix of normally distributed values where each row has mean 0 and variance 1, $z$, and multiply it by the Cholesky factor, $L$: $X = Lz$. This gives us a dataset, $X$, with covariance $G = LL^T$ because
+
+$$Var(X) = Var(L z) = L~ Var(z)~ L^T = LL^T = G$$
+
+You can perform Cholesky decomposition in R using the `chol` function. Notice that Cholesky decomposition using the dense matrix is about 5 times slower on average than Cholesky decomposition on the sparse matrix.
+
+```{r}
+# Measure the speed of cholesky deocmposition on each matrix type
+microbenchmark(chol(cov_dense), unit = "ms")
+microbenchmark(chol(cov_sparse), unit = "ms")
+```
+
+Below we use the sparse covariance matrix to perform Cholesky factorization:
+
+```{r}
+# perform Cholesky decomposition to obtain the lower triangular factor
+L <- t(chol(cov_sparse))
+```
+
+
+```{r}
+# sample size of 10,000
+n <- 100000
+# calculate the simulated dataset
+X <- L %*% matrix(rnorm(n * p), nrow = p, ncol = n)
+X <- t(X)
+# center and scale the dataset
+X_scaled <- scale(X, center=TRUE, scale=TRUE)
+```
+
+Comparing the covariance matrix of our simulated data, $X$, we get the same as our orignal covariance matrix! Yay!
+
+```{r}
+round(cov(as.matrix(X)), 1)
+cov_sparse
+```
+
+Note that a pairwise scatterplot matrix shows that adjacent variables are highly correlated and as we move away from the diagonal, the correlation decreases.
+
+```{r}
+# take a sample of X
+X_sample <- as.data.frame(X_scaled) %>%
+  sample_n(50)
+# plot a pairwise scatterplot matrix
+GGally::ggpairs(X_sample)
+```
+
+# Exercise 2
+
+**Use `scale()` to center and scale the columns. Calculate the principal components using the four functions `prcomp()`, `eigen()`, `svd()` and `irlba()`. Use microbenchmark to compare the speeds. Which method was the fastest? Confirm that they give the same answer. Note that both `svd()` and `irlba()` perform singular value decomposition, and you can restrict the functions to just look at the top five singular values.**
+
+
+Note that we already scaled the columns above. 1
+
+Below, we use each of the above methods to perform PCA, and measure how long each of them takes. Note that singular value decomposition (SVD) is a generalization of eigendecomposition that can be applied to any square matrix (i.e. it is not required that the matrix is positive definite). The eigenvalues, $\lambda_i$ of a matrix are related to the singular values, $s_i$, by
+
+$$\lambda_i = \frac{s_i^2}{n−1}$$
+
+
+```{r warning=FALSE}
+# Calculate the PCA using various methods.
+# Using the built-in method.
+microbenchmark(
+  prcomp <- prcomp(X_scaled, center=FALSE, scale=FALSE),
+  times=1, unit="ms")
+
+# Use eigen.
+microbenchmark(
+  eigen <- eigen(cov(X_scaled)),
+  times=1, unit="ms")
+
+# Use svd (singular value decomposition)
+microbenchmark(
+  svd <- svd(X_scaled / sqrt(nrow(X_scaled) - 1), nu=5, nv=5),
+  times=1, unit="ms")
+
+# Use the irlba library to calculate the first few elements of an SVD.
+microbenchmark(
+  irlba <- irlba(X_scaled / sqrt(nrow(X_scaled) - 1), nu = 5, nv = 5),
+  times=1, unit="ms")
+```
+
+It seems as though the `eigen()` function is the fastest!
+
+Next, we check that each of them yield the same results:
+
+```{r}
+# Check the eigenvalues.
+data.frame(eigen = eigen$values,
+      prcomp = prcomp$sdev^2,
+      svd = svd$d^2,
+      irlba = irlba$d^2) %>%
+  round(2)
+
+# Check the first eigenvector.
+data.frame(eigen = eigen$vectors[,1],
+           prcomp = prcomp$rotation[,1],
+           svd = svd$v[,1],
+           irlba = irlba$v[,1]) %>% 
+  round(2) %>% head
+```
+
+
+# Exercise 3
+
+**Make a scree plot to decide how many principal components to choose**
+
+```{r}
+data.frame(eigenvalue = prcomp$sdev^2,
+           component = 1:10) %>%
+  mutate(elbow = (component == 4)) %>%
+  mutate(cum_prop_var = cumsum(eigenvalue) / sum(eigenvalue)) %>%
+  ggplot() + 
+  geom_line(aes(x = component, y = cum_prop_var)) +
+  geom_point(aes(x = component, y = cum_prop_var, col = elbow, size = elbow)) +
+  theme_classic() +
+  scale_x_continuous(breaks = 1:10) +
+  scale_color_manual(values = c("grey20", "red4")) +
+  theme(legend.position = "none")
+  
+
+```
+
+
+
+
+# Exercise 4
+
+**Run PCA analysis on the heptathlon data (ignoring the score) from the HSAUR package**
+
+```{r}
+# load in the heptathlon data
+data("heptathlon", package = "HSAUR")
+```
+For convenience, we can recode the variables so that a higher value always corresponds to "better".
+
+```{r}
+# Recode data so that the larger value is always "better"
+heptathlon_trans <- heptathlon %>% 
+  mutate(hurdles = max(hurdles) - hurdles,
+         run200m = max(run200m) - run200m,
+         run800m = max(run800m) - run800m) %>%
+  # remove the score from our transformed dataset
+  select(-score)
+```
+
+It is always a good idea to get an idea of the relationships between the variables in the dataset. There are many ways to do this, and a particularly convinient one is to make a scatterplot matrix.
+
+```{r}
+# Make a scatter plot matrix
+ggpairs(heptathlon_trans)
+```
+
+Next, we can caluclate the principal components of the heptathlon data.
+
+```{r}
+# Calculate the PCs
+heptathlon_cov <- cov(scale(heptathlon_trans))
+heptathlon_eigen <- eigen(heptathlon_cov)
+```
+
+Below we plot a scree plot or a plot that shows the cumulative proportion of variability explained
+
+```{r}
+# calculate proportion of variance explained
+data.frame(prop_var = cumsum(heptathlon_eigen$values) / sum(heptathlon_eigen$values),
+           component = 1:ncol(heptathlon_trans)) %>%
+  # plot a scree plot
+  ggplot(aes(x = component, y = prop_var)) +
+  geom_bar(stat = "identity") +
+  geom_text(aes(x = component, y = prop_var - 0.05, 
+                label = paste0(round(100 * prop_var), "%")),
+            col = "white") +
+  theme_classic() +
+  ylab("Cumulative prop of variability explained") +
+  xlab("Principal component") +
+  scale_x_continuous(breaks = 1:7)
+```
+
+This means that the first principal component explains 64% of the variability in the data, the first two principal components together explain 81% of the variability, and so on.
+
+We can also show that the first principal component is highly correlated with the score of the judges (note that this variable was not used in PCA)
+
+```{r}
+# rotate the data so that it lives in PC space
+# this means that you multiply the data by the eigenvector (rotation) matrix
+heptathlon_rotated <- as.matrix(scale(heptathlon_trans)) %*% heptathlon_eigen$vectors
+# calculate the correlation between 
+cor(heptathlon$score, heptathlon_rotated[, 1])
+```
+
+Next, we can plot the data in the space defined by the first two components and show that those closest to the bottom left-hand corner are those with the highest judge's scores.
+
+```{r}
+heptathlon_rotated <- as.data.frame(heptathlon_rotated)
+colnames(heptathlon_rotated) <- paste0("PC", 1:7)
+# add score and athlete to the data
+heptathlon_rotated <- cbind(heptathlon_rotated,
+                            score = heptathlon$score,
+                            athlete = rownames(heptathlon))
+
+
+ggplot(heptathlon_rotated) + 
+  geom_point(aes(x = PC1, y = PC2, size = order(score)),
+             col = "grey50") +
+  ggrepel::geom_text_repel(aes(x = PC1, y = PC2, label = athlete), 
+                           alpha = 0.7) +
+  theme_classic() +
+  scale_size_continuous(name = "judge ranking", 
+                        breaks = c(5, 10, 15, 20, 25), 
+                        labels = c("worst", "", "", "", "best"))
+
+```
+
+This means that within this plot of two variables, we are showing 81% of the variability that was present in the original dataset containing 7 variables.
+
