@@ -1,0 +1,214 @@
+---
+title: "Wine clustering example"
+author: ""
+date: "9/21/2017"
+output: html_document
+---
+
+
+
+```{r, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(knitr)
+library(gridExtra)
+library(cluster)
+
+# load the wines dataset
+wines <- read.csv('wines.csv')
+colnames(wines) <- c("cultivar", "alcohol", "malic acid", "ash", 
+                     "alcalinity of ash", "magnesium", "total phenols", 
+                     "flavanoids", "nonflavanoid phenols", 
+                     "proanthocyanins", "color intensity", "hue", 
+                     "OD280/OD315 of diluted wines", "proline")
+cultivar <- as.factor(wines$cultivar)
+wines <- select(wines, -cultivar)
+
+# define a function for plotting
+plotLabeledData <- function(x, y, labels=NULL) {
+  # Plot labeled data along two axes
+  # Args:
+  #   x: observation values for the first axis to plot over
+  #   y: observation values for the second axis to plot over
+  #   labels: factor giving the label of each point
+
+  plotting.data <- data.frame(X = x, Y = y, label = labels)
+  p <- ggplot(plotting.data) + 
+    geom_point(aes(x = X, y = Y, color = label))
+  return(p)
+  
+}
+
+
+```
+
+
+The data included in this directory comes from the UCI machine learning
+repository ([link](https://archive.ics.uci.edu/ml/datasets/wine)). It contains information on the chemical composition of 178 wines
+from 3 cultivars. Your task explore and evaluate different clusterings of this data. 
+
+To achieve an "overall" view of the data, we will visualize the data projected onto the first two principal components.
+
+# Principal component analysis
+
+First, we must calculate the principal components.
+
+
+```{r true-labels, message=FALSE}
+# run PCA
+wines.pca <- prcomp(wines, scale = T)
+```
+
+We can look to see the variable loadings for each variable on the first two principal components.
+
+```{r}
+# which variables contribute most to the first two principal components?
+kable(wines.pca$rotation[, 1:2])
+
+```
+
+
+Looking at the cumulative variability, it also looks as though the first 4 PCs explain around 74% of the variability in the data.
+
+```{r}
+# what is the cumulative proportion of variance explained by each PC?
+cumulative_variability = cumsum(wines.pca$sdev^2) / sum(wines.pca$sdev^2)
+kable(data.frame(`principal component` = 1:13,
+                 `cumulative variability explained` = cumulative_variability))
+```
+
+The figure below shows the data projected onto the first two
+principal components, labeled by cultivar. We see that the data cluster nicely with respect to cultivar in this space.
+
+```{r}
+# plot wine data projected onto first two PCs and compare across cultivar
+plotLabeledData(wines.pca$x[, 1], 
+                wines.pca$x[, 2], 
+                labels=cultivar)   +
+  ggtitle("Groupings based on cultivar") +
+  xlab("PC1") + 
+  ylab("PC2")
+```
+
+
+# Clustering in raw and reduced spaces
+
+The figure below shows the labels that result from clustering the
+raw data and those that result from clustering data projected onto the first two
+principal components. We can see that the first two PCs contain much of the
+information required to group by cultivar.
+
+
+```{r raw-labels, message=FALSE, fig.cap="Clusterings from raw (left) and reduced (right) data"}
+# cluster wine data in original and PC spaces and plot along first two PCs
+k <- 3
+# k-means using all three variables
+kmeans.raw <- kmeans(scale(wines), centers = k)
+# spectral clustering using first 2 pc only
+kmeans.reduced <- kmeans(wines.pca$x[, 1:2], centers = k)
+
+# plot kmeans results
+p.raw <- plotLabeledData(wines.pca$x[, 1], wines.pca$x[, 2],
+  labels = as.factor(kmeans.raw$cluster)) +
+  ggtitle("Clusters based on raw data") +
+  xlab("PC1") + 
+  ylab("PC2")
+
+# plot spectral clustering
+p.reduced <- plotLabeledData(wines.pca$x[, 1], wines.pca$x[, 2], 
+  labels = as.factor(kmeans.reduced$cluster))  +
+  ggtitle("Clusters based on reduced dataset") +
+  xlab("PC1") + 
+  ylab("PC2")
+grid.arrange(p.raw, p.reduced, ncol=2) 
+```
+
+ 
+# Clustering with various $k$: stability
+
+For the previous example we set $k=3$. In some sense, we cheated using the known
+number of cultivars to choose $k$. Typically the number of clusters is unknown
+and we need some way to evaluate the quality of a clustering. One useful metric
+for this is cluster stability: do we recover similar clusters by changing part
+of our analysis (e.g. using different starting points for algorithms that
+converge to local optima, perturbing variables). We will cover more formal
+metrics for stability later in the course. For now, we will use visualization to
+examine cluster stability. Try using the $k-$means algorithm to cluster the wine
+data with different values of $k$. For each $k$ run the algorithm a few times
+using different starting points (the kmeans function uses random starting
+points by default) and plot your results. What values of $k$ lead to stable
+clusterings? 
+
+
+```{r k3, message=FALSE, fig.cap="Cluster labels using k=3"}
+# run spectral clustering 4 times with 3 centers
+kmeans.3 <- lapply(1:4, function(k) {
+    kmeans(wines.pca$x[,1:2], centers = 3)
+  })
+# plot the resulting clusters from each run of spectral clustering
+clusters <- lapply(kmeans.3, function(km) {
+  p <- plotLabeledData(wines.pca$x[, 1], wines.pca$x[, 2],
+    labels = as.factor(km$cluster))
+  p <- p + theme(legend.position = "none") +
+  xlab("PC1") + 
+  ylab("PC2")
+})
+grid.arrange(clusters[[1]], clusters[[2]], 
+             clusters[[3]], clusters[[4]], 
+             ncol = 2)
+```
+
+```{r k10, message=FALSE, fig.cap="Cluster labels using k=10"}
+# re-run with 10 clusters
+kmeans.10 <- lapply(1:4, function(k) {
+    kmeans(wines.pca$x[ ,1:2], centers = 10)
+  })
+# plot the 4 runs of spectral clustering with 10 centers
+clusters <- lapply(kmeans.10, function(km) {
+  p <- plotLabeledData(wines.pca$x[, 1], wines.pca$x[, 2],
+    labels = as.factor(km$cluster))
+  p <- p + theme(legend.position = "none") +
+  xlab("PC1") + 
+  ylab("PC2")
+})
+grid.arrange(clusters[[1]], clusters[[2]], clusters[[3]], clusters[[4]], ncol=2)
+```
+
+
+# Silhouettes
+
+Intuitively, we expect good clusters to contain points that are close to one
+another and far from points in other clusters. Silhouettes are one way to
+measure this. Given a distance matrix and set of cluster labels, R's silhouette
+function in the package cluster calculates:
+
+
+$$s_{i}=\frac{b_{i}-a_{i}}{\max(a_{i}, b_{i})}$$
+
+
+where $a_{i}=\sum_{j\in C_{i}} d(x_{i}, x_{j})$ is the average distance between
+$x_i$ and all other points belonging to the same cluster $C_{i}$ and
+$b{i}=\min_{C_k} \sum_{j\in C_{k}} d(x_{i}, x_{j})$ for $k\ne i$ is the average
+dissimilarity between $x_{i}$ and the nearest cluster to which $x_{i}$ does not
+belong. The figure below shows an example with $k=3$ (average silhouette width of 0.56). Try
+experimenting with various $k$ and plot the resulting silhouettes.
+
+```{r silhouette3, message=FALSE, fig.height=8}
+# calculate a distance matrix based on the first 2 principal components
+dist.mat <- dist(wines.pca$x[, 1:2])
+s <- silhouette(kmeans.reduced$cluster, dist.mat)
+# average silhouette width
+mean(s[, 3])
+plot(s)
+```
+
+Setting k = 10, we get an average silhouette width of 0.4 (implying that $k=3$ is a better choice for number of clusters).
+
+```{r silhouette10, echo=FALSE, cache=FALSE, message=FALSE, fig.height = 12}
+kmeans10 <- kmeans(wines.pca$x[, 1:2], centers=10)
+s <- silhouette(kmeans10$cluster, dist.mat)
+# average silhouette width
+mean(s[, 3])
+plot(s)
+```
+
+You can probably make much prettier plots than these by calculating silhouette width manually and using ggplot! These plots have terrible headings and are just generally unsatisfactory.
