@@ -1,0 +1,306 @@
+---
+title: "Stability of wine clustering example"
+author: "Rebecca Barter"
+date: "9/21/2017"
+output: html_document
+---
+
+First, I load in the data:
+
+```{r, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(knitr)
+library(forcats)
+library(gridExtra)
+library(cluster)
+
+# load the wines dataset
+wines <- read.csv('wines.csv')
+colnames(wines) <- c("cultivar", "alcohol", "malic acid", "ash", 
+                     "alcalinity of ash", "magnesium", "total phenols", 
+                     "flavanoids", "nonflavanoid phenols", 
+                     "proanthocyanins", "color intensity", "hue", 
+                     "OD280/OD315 of diluted wines", "proline")
+
+# save the grouping variable (cultivar) as its own variable
+cultivar <- as.factor(wines$cultivar)
+# remove cultivar from the dataset 
+wines <- select(wines, -cultivar)
+```
+
+# Clustering
+
+Then, I will identify some clusters in the data.
+
+```{r}
+# run k-means to get 3 clusters
+clusters_orig <- kmeans(scale(wines), centers = 3)
+# identify what objects are contained within this cluster object
+names(clusters_orig)
+```
+
+To get an idea of the clusters, I plot the groups in the space defined by the alcohol and proline variables. 
+
+```{r}
+data.frame(wines, cluster = as.factor(clusters_orig$cluster)) %>%
+  ggplot() + 
+  geom_point(aes(x = alcohol, y = proline, col = cluster))
+```
+
+
+For reference, the actual grouping in the data defined by cultivar looks very similar to the groupings we found.
+
+```{r}
+data.frame(wines, cultivar) %>%
+  ggplot() + 
+  geom_point(aes(x = alcohol, y = proline, col = cultivar))
+```
+
+# Stability of clustering
+
+I now want to ask how "stable" these clusters are. There are two aspects of stability that we will discuss here:
+
+1. **Computational stability**: How do the groupings change when the algorithm is re-run on the original dataset? (Can the conclusions drawn from the algorithm be trusted for this sample?)
+
+1. **Generalization stability**: How do the groupings change when the algorithm is re-run on different datasets from the same source? (Do the conclusions drawn from this algorithm hold for the general population?)
+
+
+## Stability of the algoirithm (computational stability)
+
+To test the stability of the algorithm itself, I will re-run the algorithm multiple times on the original dataset.
+
+```{r}
+set.seed(237489)
+# pre-scale wines so the computer doesn't have to do this over-and-over again
+wines_scaled <- scale(wines)
+# run k-means 1,000 times (to get 3 clusters each time)
+clusters_list <- lapply(1:100, function(iter) {
+  kmeans(wines_scaled, centers = 3)
+})
+```
+
+Next, I need to figure out how to compare the clusterings obtained from each loop.
+
+To compare the quality of clustering across iterations, we could come up with a quality measure (such as the proportion of within SS to between SS) to compare clusterings. However, this approach does not tell us whether the actual groupings we obtain are the same between iterations (which is our question of interest).
+
+Instead, perhaps we can use some kind of similarity measure corresponding to the proportion of pairwise data points in two versions of the clustering that appear together in the same cluster.
+
+To keep things simple for this tutorial, we will compare two groupings of the data by comparing the proportion of samples in the largest cluster across iterations. This is not a very good measure of similarity, but for our purposes will not require much code.
+
+
+```{r}
+# collapse all cluster memberships into columns a data frame
+clusters_df <- sapply(clusters_list, function(clust) clust$cluster)
+colnames(clusters_df) <- c(paste0("iter", 1:ncol(clusters_df)))
+```
+
+```{r}
+# identify the proportion of data points that fall into the largest cluster
+prop_largest_cluster <- clusters_df %>% 
+  as.data.frame %>% 
+  # table(clust) counts how many data points fall into each group
+  # sort(table(clust), decreasing = T) arranges the groups in decreasing order of size
+  summarise_all(function(clust) {
+      sort(table(clust), decreasing = T)[1] / length(clust)
+    }) 
+```
+
+It turns out that when $k = 3$, the largest cluster for each iteration of k-means had exactly the same proportion of data points in it! You can check using more sophisticated measures to find that each iteration does indeed generate the exact same clustering. This shows that the k-means algorithm when $k = 3$ is incredibly stable. 
+
+```{r}
+table(unlist(prop_largest_cluster))
+```
+
+
+
+A natural question now is whether this result holds true for other values of $k$? Below I write and then run a function that repeats this analysis for a range of values of $k$.
+
+
+
+```{r}
+# below is a function that runs the above analysis for any value of k
+iterate_kmeans <- function(N = 100, k) {
+  # arguments:
+  #   N: number of iterations
+  #   k: the number of clusters
+  # 
+  # returns:
+  #   a vector specifying the proportion of data points in the 
+  #   largest cluster for each iteration
+  
+  
+  # run k-means N times (to get k clusters each time)
+  clusters_list <- lapply(1:N, function(iter) {
+    kmeans(wines_scaled, centers = k)
+  })
+  
+  # collapse all cluster memberships into columns a data frame
+  clusters_df <- sapply(clusters_list, function(clust) clust$cluster)
+  colnames(clusters_df) <- c(paste0("iter", 1:ncol(clusters_df)))
+  
+  # identify the proportion of data points that fall into the largest cluster
+  prop_largest_cluster <- clusters_df %>% 
+    as.data.frame %>% 
+    # table(clust) counts how many data points fall into each group
+    # sort(table(clust), decreasing = T) arranges the groups in decreasing order of size
+    summarise_all(function(clust) {
+        sort(table(clust), decreasing = T)[1] / length(clust)
+      })   
+  
+  return(unlist(prop_largest_cluster))
+}
+
+```
+
+
+
+```{r}
+set.seed(1231789)
+# run the analysis for k = 2, 3, 4, 5, 6
+kmeans_results <- data.frame(k2 = iterate_kmeans(k = 2),
+                             k3 = iterate_kmeans(k = 3),
+                             k4 = iterate_kmeans(k = 4),
+                             k5 = iterate_kmeans(k = 5),
+                             k6 = iterate_kmeans(k = 6))
+```
+
+
+```{r, fig.height = 10}
+# compare the cluster similarity (using our crude measure) for each k
+kmeans_results %>%
+  gather(key = "k", value = "prop") %>%
+  ggplot() + 
+  geom_histogram(aes(x = prop), col = "white") +
+  facet_wrap(~k, ncol = 1) +
+  xlab("Proportion of data points in largest cluster") +
+  ylab("Number of iterations") + 
+  theme_bw(base_size = 16)
+```
+
+
+
+What we find is that there are fairly large differences between the largest cluster in all cluterings when $k > 3$. This implies that $k = 3$ is the most stable choice (algorithmically, that is), and thus $k = 3$ is what we should be using!
+
+
+
+## Stability of the conclusions drawn (generalization stability)
+
+The above analysis only asked the question of how the algorithm changed when it was re-run on the original dataset. While this is useful for assessing the stability of the algorithm itself, it is not incredibly useful for assessing the generalizability of the groupings found to the general population consisting of wines from these three cultivars. 
+
+To assess the issue of generalizability, I will use a number of subsampling algorithms. The idea is to try to emulate drawing new samples from the original population, except that we must sample from our observed sample instead of directly from the population itself (since we don't have access to it). To keep things simple again, we will compare clusters using our crude measure of how the proportion of data points in the largest cluster changes.
+
+### Bootstrap
+
+I want to see how this measure changes across bootstrap samples.
+
+To begin with, I calculate 100 bootstrap samples (by sampling with replacement).
+
+```{r}
+# generate 100 bootstrap samples of the data
+set.seed(23484)
+wines_boot_list <- lapply(1:100, function(iter) {
+  wine_boot_index <- sample(1:nrow(wines), replace = T)
+  wine_boot <- wines[wine_boot_index, ]
+})
+```
+
+Next, I apply k-means with 3 clusters to each of these bootstrap samples
+```{r}
+# apply kmeans clustering to each of these datasets
+wines_boot_cluster <- sapply(wines_boot_list, function(wine_boot) {
+  kmeans(wine_boot, centers = 3)$cluster
+})
+colnames(wines_boot_cluster) <- c(paste0("iter", 1:ncol(wines_boot_cluster)))
+```
+
+The very basic measure we use to describe each clustering for comparison purposes is the proportion of data that appears in the largest cluster.
+
+```{r}
+# identify the proportion of data points that fall into the largest cluster
+prop_largest_cluster_boot <- wines_boot_cluster %>% 
+  as.data.frame %>% 
+  # table(clust) counts how many data points fall into each group
+  # sort(table(clust), decreasing = T) arranges the groups in decreasing order of size
+  summarise_all(function(clust) {
+      sort(table(clust), decreasing = T)[1] / length(clust)
+    })
+```
+
+Lastly, we can plot the distribution of this measure across the bootstrap samples. 
+
+```{r}
+# plot the distribution of largest cluster proportion for the bootstrap samples
+data.frame(prop = unlist(prop_largest_cluster_boot)) %>%
+  ggplot() + 
+  geom_histogram(aes(x = prop), col = "white", binwidth = 0.01) +
+  xlab("Proportion of data points in largest cluster") +
+  ylab("Number of iterations") + 
+  theme_bw(base_size = 16)
+```
+
+
+
+Notice how we no longer have the same value across the vast majority of bootstrap samples (compared to when we had used the entire sample again and simply re-ran the algorithm). 
+
+Moreover, the mean is around 0.43 (which is quite substantially larger than the value that we got when we used the entire observed dataset - that value was around 0.36).
+
+
+### Sub-sampling
+
+This time, instead of sampling the dataset with replacement to get a sample the same size as the original sample, I will try subsampling *without replacement* to get a sample 80% of the size of the original sample.
+
+
+
+```{r}
+# generate 100 bootstrap samples of the data
+set.seed(22344)
+wines_sub_list <- lapply(1:100, function(iter) {
+  wine_sub_index <- sample(1:nrow(wines), replace = F, size = round(0.8 * nrow(wines)))
+  return(wines[wine_sub_index, ])
+})
+```
+
+Next, I apply k-means with 3 clusters to each of these subsamples.
+
+```{r}
+# apply kmeans clustering to each of these datasets
+wines_sub_cluster <- sapply(wines_sub_list, function(wine_sub) {
+  kmeans(wine_sub, centers = 3)$cluster
+})
+colnames(wines_sub_cluster) <- c(paste0("iter", 1:ncol(wines_sub_cluster)))
+```
+
+Again, we use the same measure to summarise the clustering for each iteration.
+
+```{r}
+# identify the proportion of data points that fall into the largest cluster
+prop_largest_cluster_sub <- wines_sub_cluster %>% 
+  as.data.frame %>% 
+  # table(clust) counts how many data points fall into each group
+  # sort(table(clust), decreasing = T) arranges the groups in decreasing order of size
+  summarise_all(function(clust) {
+      sort(table(clust), decreasing = T)[1] / length(clust)
+    })
+```
+
+Lastly, we can plot the distribution of this measure across the bootstrap samples. 
+
+```{r}
+# plot the distribution of largest cluster proportion for the sub samples
+data.frame(prop = unlist(prop_largest_cluster_sub)) %>%
+  ggplot() + 
+  geom_histogram(aes(x = prop), col = "white", binwidth = 0.01) +
+  xlab("Proportion of data points in largest cluster") +
+  ylab("Number of iterations") + 
+  theme_bw(base_size = 16)
+```
+
+
+The distribution looks quite different now, however, the mean (0.43) is around the same as in the bootstrap sampling.
+
+Why might we prefer one of these methods over the other?
+
+
+### Jackknife
+
+Details left up the student!
